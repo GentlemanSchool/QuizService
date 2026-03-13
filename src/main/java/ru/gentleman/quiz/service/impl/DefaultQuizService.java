@@ -47,8 +47,11 @@ public class DefaultQuizService implements QuizService {
     public QuizDto create(QuizDto quizDto) {
         log.info("create {}", quizDto);
 
+        Quiz quiz = this.quizMapper.toEntity(quizDto);
+        quiz.setIsActive(true);
+
         Quiz createdQuiz =
-                this.quizRepository.save(this.quizMapper.toEntity(quizDto));
+                this.quizRepository.save(quiz);
 
         return this.quizMapper.toDto(createdQuiz);
     }
@@ -68,6 +71,8 @@ public class DefaultQuizService implements QuizService {
                     .title(quizDto.title())
                     .description(quizDto.description())
                     .lessonId(quizDto.lessonId())
+                    .isActive(true)
+                    .questions(question.getQuestions())
                     .build();
 
             this.quizRepository.save(updatedQuiz);

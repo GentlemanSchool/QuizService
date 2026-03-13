@@ -13,6 +13,8 @@ import java.util.UUID;
 @Repository
 public interface QuizRepository extends JpaRepository<Quiz, UUID> {
 
+    Optional<Quiz> findByIdAndIsActive(UUID id, Boolean isActive);
+
     List<Quiz> findAllByLessonId(UUID lessonId);
     @Query(value = """
                     SELECT quiz.quizzes.id FROM quiz.quizzes

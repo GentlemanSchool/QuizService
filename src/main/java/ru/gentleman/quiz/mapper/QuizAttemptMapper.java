@@ -5,6 +5,8 @@ import org.mapstruct.Mapping;
 import ru.gentleman.quiz.dto.QuizAttemptDto;
 import ru.gentleman.quiz.entity.QuizAttempt;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring")
 public interface QuizAttemptMapper {
 
@@ -13,4 +15,6 @@ public interface QuizAttemptMapper {
 
     @Mapping(target = "quizId", source = "quiz.id")
     QuizAttemptDto toDto(QuizAttempt entity);
+
+    List<QuizAttemptDto> toDto(List<QuizAttempt> entity);
 }

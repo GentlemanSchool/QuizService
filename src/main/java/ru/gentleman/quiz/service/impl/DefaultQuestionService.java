@@ -32,7 +32,7 @@ public class DefaultQuestionService implements QuestionService {
     public QuestionDto get(UUID id) {
         log.info("get {}", id);
 
-        Question question = this.questionRepository.findById(id)
+        Question question = this.questionRepository.findByIdAndIsActive(id, true)
                 .orElse(null);
 
         return this.questionMapper.toDto(question);
@@ -44,9 +44,11 @@ public class DefaultQuestionService implements QuestionService {
         log.info("create {}", questionDto);
 
         this.quizService.get(questionDto.quizId());
+        Question question = this.questionMapper.toEntity(questionDto);
+        question.setIsActive(true);
 
         Question createdQuestion =
-                this.questionRepository.save(this.questionMapper.toEntity(questionDto));
+                this.questionRepository.save(question);
 
         return this.questionMapper.toDto(createdQuestion);
     }
@@ -57,14 +59,16 @@ public class DefaultQuestionService implements QuestionService {
     public void update(UUID id, QuestionDto questionDto) {
         log.info("update {}, {}", id, questionDto);
 
-        this.questionRepository.findById(id).ifPresentOrElse(question -> {
+        this.questionRepository.findByIdAndIsActive(id, true).ifPresentOrElse(question -> {
             Question updatedQuestion = Question.builder()
-                    .id(id) //TODO
+                    .id(id)
                     .title(questionDto.title())
                     .description(questionDto.description())
                     .correctAnswer(questionDto.correctAnswer())
                     .explanation(questionDto.explanation())
                     .quiz(question.getQuiz())
+                    .score(questionDto.score())
+                    .isActive(true)
                     .build();
 
             this.questionRepository.save(updatedQuestion);
@@ -79,7 +83,7 @@ public class DefaultQuestionService implements QuestionService {
     public void delete(UUID id) {
         log.info("delete {}", id);
 
-        Question question = this.questionRepository.findById(id)
+        Question question = this.questionRepository.findByIdAndIsActive(id, true)
                 .orElseThrow(() -> ExceptionUtils.notFound("error.question.not_found_id", id));
 
         this.questionRepository.delete(question);
