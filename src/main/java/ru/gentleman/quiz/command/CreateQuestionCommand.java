@@ -1,14 +1,14 @@
 package ru.gentleman.quiz.command;
 
 import lombok.Builder;
-import org.axonframework.modelling.command.AggregateIdentifier;
+import org.axonframework.modelling.command.TargetAggregateIdentifier;
 
 import java.util.UUID;
 
 @Builder
 public record CreateQuestionCommand(
         UUID id,
-        @AggregateIdentifier
+        @TargetAggregateIdentifier
         UUID quizId,
         String title,
         String description,

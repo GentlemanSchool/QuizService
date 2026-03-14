@@ -9,7 +9,7 @@ spring:
     type: redis
     cache-names: redis-cache
   jpa:
-    database-platform: ru.gentleman.user.config.AxonPostgreSQLDialect
+    database-platform: ru.gentleman.quiz.config.AxonPostgreSQLDialect
     hibernate:
       ddl-auto: validate
     show-sql: false
@@ -29,6 +29,7 @@ spring:
   messages:
     basename: messages
     encoding: UTF-8
+
   security:
     oauth2:
       resourceserver:
@@ -46,7 +47,13 @@ redisson:
 axon:
   eventhandling:
     processors:
-      user-group:
+      quiz-group:
+        mode: pooled
+      question-group:
+        mode: pooled
+      quiz-attempt-group:
+        mode: pooled
+      user-answer-group:
         mode: pooled
   serializer:
     general: jackson
@@ -60,3 +67,10 @@ axon:
 otel:
   sdk:
     disabled: true
+
+springdoc:
+  swagger-ui:
+    use-root-path: true
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs

@@ -1,8 +1,10 @@
 package ru.gentleman.quiz.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.*;
-import org.hibernate.annotations.UuidGenerator;
 
 import java.util.List;
 import java.util.UUID;
@@ -17,8 +19,6 @@ import java.util.UUID;
 public class Quiz {
 
     @Id
-    @UuidGenerator
-    @GeneratedValue
     private UUID id;
 
     private String title;

@@ -2,7 +2,6 @@ package ru.gentleman.quiz.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.UuidGenerator;
 
 import java.util.UUID;
 
@@ -16,8 +15,6 @@ import java.util.UUID;
 public class Question {
 
     @Id
-    @UuidGenerator
-    @GeneratedValue
     private UUID id;
 
     private String title;

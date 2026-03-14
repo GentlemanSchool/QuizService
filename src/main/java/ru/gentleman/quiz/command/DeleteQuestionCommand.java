@@ -1,12 +1,12 @@
 package ru.gentleman.quiz.command;
 
-import org.axonframework.modelling.command.AggregateIdentifier;
+import org.axonframework.modelling.command.TargetAggregateIdentifier;
 
 import java.util.UUID;
 
 public record DeleteQuestionCommand(
         UUID id,
-        @AggregateIdentifier
+        @TargetAggregateIdentifier
         UUID quizId
 ) {
 }

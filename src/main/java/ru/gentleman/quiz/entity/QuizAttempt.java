@@ -2,7 +2,6 @@ package ru.gentleman.quiz.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.UuidGenerator;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,8 +17,6 @@ import java.util.UUID;
 public class QuizAttempt {
 
     @Id
-    @UuidGenerator
-    @GeneratedValue
     private UUID id;
 
     private UUID userId;

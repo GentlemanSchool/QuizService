@@ -25,15 +25,15 @@ public class QuizAttemptQueryController {
                 ResponseTypes.instanceOf(QuizAttemptDto.class)).join();
 
         if(quizAttemptDto == null) {
-            throw new NotFoundException("error.quiz_attempt.not_found_id", id);
+            throw new NotFoundException("error.quiz_attempt.not_found", id);
         }
 
         return quizAttemptDto;
     }
 
     @GetMapping(params = "userId")
-    public List<QuizAttemptDto> getAllByUserId(@RequestParam("userId")UUID userId) {
+    public List<Object> getAllByUserId(@RequestParam("userId")UUID userId) {
         return this.queryGateway.query(new FindAllQuestionsByQuizIdQuery(userId),
-                ResponseTypes.multipleInstancesOf(QuizAttemptDto.class)).join();
+                ResponseTypes.multipleInstancesOf(Object.class)).join();
     }
 }

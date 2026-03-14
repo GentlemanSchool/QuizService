@@ -18,7 +18,7 @@ import java.util.UUID;
 @Slf4j
 @Service
 @Transactional(readOnly = true)
-@RequiredArgsConstructor //TODO добавить мягкое удаление
+@RequiredArgsConstructor
 public class DefaultQuestionService implements QuestionService {
 
     private final QuestionRepository questionRepository;
@@ -86,6 +86,6 @@ public class DefaultQuestionService implements QuestionService {
         Question question = this.questionRepository.findByIdAndIsActive(id, true)
                 .orElseThrow(() -> ExceptionUtils.notFound("error.question.not_found_id", id));
 
-        this.questionRepository.delete(question);
+        question.setIsActive(false);
     }
 }

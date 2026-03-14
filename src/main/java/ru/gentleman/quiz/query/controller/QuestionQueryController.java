@@ -26,7 +26,7 @@ public class QuestionQueryController {
                 ResponseTypes.instanceOf(QuestionDto.class)).join();
 
         if(questionDto == null) {
-            throw new NotFoundException("error.question.not_found_id", id);
+            throw new NotFoundException("error.question.not_found", id);
         }
 
         return questionDto;

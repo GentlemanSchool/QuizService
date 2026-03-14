@@ -2,8 +2,6 @@ package ru.gentleman.quiz.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UuidGenerator;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -18,8 +16,6 @@ import java.util.UUID;
 public class UserAnswer {
 
     @Id
-    @UuidGenerator
-    @GeneratedValue
     private UUID id;
 
     private UUID userId;

@@ -10,6 +10,7 @@ public record QuizAttemptDto(
         UUID id,
         UUID userId,
         UUID quizId,
+        int finalScore,
         LocalDateTime createdAt,
         LocalDateTime completedAt,
         Boolean isActive

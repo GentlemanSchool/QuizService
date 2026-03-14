@@ -1,6 +1,7 @@
 package ru.gentleman.quiz.command.aggregate;
 
 import lombok.extern.slf4j.Slf4j;
+import org.axonframework.commandhandling.CommandExecutionException;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.modelling.command.AggregateIdentifier;
@@ -8,8 +9,6 @@ import org.axonframework.modelling.command.AggregateLifecycle;
 import org.axonframework.spring.stereotype.Aggregate;
 import ru.gentleman.common.dto.QuestionSnapshot;
 import ru.gentleman.common.event.*;
-import ru.gentleman.common.exception.NotFoundException;
-import ru.gentleman.common.exception.ValidationException;
 import ru.gentleman.quiz.command.*;
 
 import java.util.HashMap;
@@ -99,7 +98,11 @@ public class QuizAggregate {
 
         QuestionSnapshot question = questions.get(command.id());
         if (question == null || !question.isActive()) {
-            throw new NotFoundException("Вопрос не найден или удален", command.id());
+            throw new CommandExecutionException(
+                    "error.question.not_found",
+                    null,
+                    command.id()
+            );
         }
 
         QuestionUpdatedEvent event = QuestionUpdatedEvent.builder()
@@ -136,7 +139,11 @@ public class QuizAggregate {
         isQuizActive();
 
         if(questions.get(command.id()) == null) {
-            throw new NotFoundException("вопрос не найден", command.id());
+            throw new CommandExecutionException(
+                    "error.question.not_found",
+                    null,
+                    command.id()
+            );
         }
 
         QuestionDeletedEvent event = new QuestionDeletedEvent(command.id());
@@ -166,7 +173,6 @@ public class QuizAggregate {
 
         QuizUpdatedEvent event = QuizUpdatedEvent.builder()
                 .id(command.id())
-                .lessonId(command.lessonId())
                 .title(command.title())
                 .description(command.description())
                 .build();
@@ -176,7 +182,6 @@ public class QuizAggregate {
 
     @EventSourcingHandler
     public void on(QuizUpdatedEvent event) {
-        this.lessonId = event.lessonId();
         this.title = event.title();
         this.description = event.description();
     }
@@ -197,7 +202,11 @@ public class QuizAggregate {
 
     private void isQuizActive() {
         if(!this.isActive) {
-            throw new ValidationException("Тест был удалён, изменения невозможны");
+            throw new CommandExecutionException(
+                    "error.quiz.deleted",
+                    null,
+                    id
+            );
         }
     }
 }

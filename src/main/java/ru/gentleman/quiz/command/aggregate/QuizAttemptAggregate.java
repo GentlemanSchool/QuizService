@@ -1,6 +1,7 @@
 package ru.gentleman.quiz.command.aggregate;
 
 import lombok.extern.slf4j.Slf4j;
+import org.axonframework.commandhandling.CommandExecutionException;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.modelling.command.AggregateIdentifier;
@@ -11,7 +12,6 @@ import ru.gentleman.common.event.QuizAttemptCreatedEvent;
 import ru.gentleman.common.event.QuizAttemptFinishedEvent;
 import ru.gentleman.common.event.QuizDeletedEvent;
 import ru.gentleman.common.event.UserAnswerCreatedEvent;
-import ru.gentleman.common.exception.ValidationException;
 import ru.gentleman.quiz.command.CreateQuizAttemptCommand;
 import ru.gentleman.quiz.command.CreateUserAnswerCommand;
 import ru.gentleman.quiz.command.DeleteQuizAttemptCommand;
@@ -62,8 +62,8 @@ public class QuizAttemptAggregate {
 
     @CommandHandler
     public QuizAttemptAggregate(CreateQuizAttemptCommand command, QuizService quizService) {
-        List<QuestionDto> questions = quizService.getAllQuestions(command.quizId());
-        Map<UUID, QuestionSnapshot> questionMap = questions.stream()
+        List<QuestionDto> receivedQuestions = quizService.getAllQuestions(command.quizId());
+        Map<UUID, QuestionSnapshot> questionMap = receivedQuestions.stream()
                 .map(questionDto -> QuestionSnapshot.builder()
                         .id(questionDto.id())
                         .title(questionDto.title())
@@ -77,7 +77,7 @@ public class QuizAttemptAggregate {
                         QuestionSnapshot::id,
                         Function.identity()
                 ));
-        int totalPossiblePoints = questions.stream()
+        int totalPossiblePoints = receivedQuestions.stream()
                 .mapToInt(QuestionDto::score)
                 .sum();
 
@@ -109,21 +109,33 @@ public class QuizAttemptAggregate {
     public void handle(CreateUserAnswerCommand command) {
         isQuizAttemptActive();
 
-        if (this.completedAt != null) {
-            throw new ValidationException("Нельзя отвечать, тест уже завершён");
+        if(this.completedAt != null) {
+            throw new CommandExecutionException(
+                    "error.quiz_attempt.already_finished",
+                    null,
+                    quizId
+            );
         }
 
         QuestionSnapshot question = this.questions.get(command.questionId());
 
-        if (question == null) {
-            throw new ValidationException("Вопрос не существует");
+        if(question == null) {
+            throw new CommandExecutionException(
+                    "error.question.not_found",
+                    null,
+                    command.questionId()
+            );
         }
 
         boolean alreadyAnswered = userAnswers.stream()
                 .anyMatch(a -> a.questionId().equals(command.questionId()));
 
-        if (alreadyAnswered) {
-            throw new ValidationException("На этот вопрос уже ответили");
+        if(alreadyAnswered) {
+            throw new CommandExecutionException(
+                    "error.user_answer.already_answered",
+                    null,
+                    command.quizAttemptId()
+            );
         }
 
         boolean isCorrect = question.correctAnswer().equals(command.answer());
@@ -164,7 +176,11 @@ public class QuizAttemptAggregate {
         isQuizAttemptActive();
 
         if(completedAt != null) {
-            throw new ValidationException("Тест уже был завершён");
+            throw new CommandExecutionException(
+                    "error.quiz_attempt.already_finished",
+                    null,
+                    quizId
+            );
         }
 
         // Расчет процента
@@ -203,7 +219,11 @@ public class QuizAttemptAggregate {
 
     private void isQuizAttemptActive() {
         if(!this.isActive) {
-            throw new ValidationException("Прохождение теста было удалёно, изменения невозможны");
+            throw new CommandExecutionException(
+                    "error.quiz_attempt.deleted",
+                    null,
+                    quizId
+            );
         }
     }
 }

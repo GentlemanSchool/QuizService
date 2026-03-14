@@ -25,17 +25,17 @@ public class UserAnswerQueryController {
                 ResponseTypes.instanceOf(UserAnswerDto.class)).join();
 
         if(userAnswerDto == null) {
-            throw new NotFoundException("error.user_answer.not_found_id", id);
+            throw new NotFoundException("error.user_answer.not_found", id);
         }
 
         return userAnswerDto;
     }
 
     @GetMapping(params = "userId")
-    public List<UserAnswerDto> getAllByUserId(@RequestParam("userId") UUID userId) {
+    public List<Object> getAllByUserId(@RequestParam("userId") UUID userId) {
         return  this.queryGateway.query(
                 new FindAllUserAnswersByUserIdQuery(userId),
-                ResponseTypes.multipleInstancesOf(UserAnswerDto.class)).
+                ResponseTypes.multipleInstancesOf(Object.class)).
                 join();
     }
 }
