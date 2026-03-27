@@ -3,7 +3,7 @@ package ru.gentleman.quiz.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 @Getter
@@ -24,7 +24,7 @@ public class UserAnswer {
 
     private Boolean isCorrect;
 
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
     @ManyToOne
     @JoinColumn(name = "question_id", referencedColumnName = "id")

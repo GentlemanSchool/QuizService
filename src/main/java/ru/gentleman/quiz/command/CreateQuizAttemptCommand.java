@@ -2,8 +2,10 @@ package ru.gentleman.quiz.command;
 
 import lombok.Builder;
 import org.axonframework.modelling.command.TargetAggregateIdentifier;
+import ru.gentleman.quiz.dto.QuestionDto;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 @Builder
@@ -12,6 +14,7 @@ public record CreateQuizAttemptCommand(
         UUID id,
         UUID userId,
         UUID quizId,
-        LocalDateTime createdAt
+        Instant createdAt,
+        List<QuestionDto> questions
 ) {
 }

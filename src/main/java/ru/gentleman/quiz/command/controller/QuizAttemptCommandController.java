@@ -13,9 +13,10 @@ import ru.gentleman.quiz.command.CreateQuizAttemptCommand;
 import ru.gentleman.quiz.command.DeleteQuizAttemptCommand;
 import ru.gentleman.quiz.command.FinishQuizAttemptCommand;
 import ru.gentleman.quiz.dto.QuizAttemptDto;
+import ru.gentleman.quiz.service.QuizService;
 
 import java.net.URI;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -27,6 +28,8 @@ public class QuizAttemptCommandController {
     private final CommandGateway commandGateway;
 
     private final MessageSource messageSource;
+
+    private final QuizService quizService;
 
     @PostMapping
     public ResponseEntity<String> create(@RequestBody @Valid QuizAttemptDto quizAttemptDto,
@@ -40,7 +43,8 @@ public class QuizAttemptCommandController {
                 .id(id)
                 .quizId(quizAttemptDto.quizId())
                 .userId(quizAttemptDto.userId())
-                .createdAt(LocalDateTime.now())
+                .createdAt(Instant.now())
+                .questions(this.quizService.getAllQuestions(quizAttemptDto.quizId()))
                 .build();
 
         this.commandGateway.sendAndWait(command);

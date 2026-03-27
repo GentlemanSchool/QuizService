@@ -41,7 +41,11 @@ public class AdviceController {
     @ExceptionHandler(ValidationException.class)
     public ProblemDetail handleException(ValidationException exception){
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
-                HttpStatus.BAD_REQUEST, exception.getMessage()
+                HttpStatus.BAD_REQUEST, this.messageSource.getMessage(
+                        exception.getMessageKey(),
+                        exception.getArgs(),
+                        Locale.getDefault()
+                )
         );
         problemDetail.setTitle(
                 this.messageSource.getMessage(
@@ -56,7 +60,7 @@ public class AdviceController {
     @ExceptionHandler(AlreadyExistsException.class)
     public ProblemDetail handleException(AlreadyExistsException exception){
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
-                HttpStatus.NOT_FOUND, this.messageSource.getMessage(
+                HttpStatus.CONFLICT, this.messageSource.getMessage(
                         exception.getMessageKey(),
                         exception.getArgs(),
                         Locale.getDefault()

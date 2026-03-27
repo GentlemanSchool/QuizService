@@ -11,5 +11,5 @@ public interface UserAnswerService {
 
     List<UserAnswerDto> getAllByUserId(UUID userId);
 
-    void create(UserAnswerDto userAnswerDto);
+    UserAnswerDto create(UserAnswerDto userAnswerDto);
 }

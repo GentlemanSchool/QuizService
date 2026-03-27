@@ -2,6 +2,7 @@ package ru.gentleman.quiz.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,25 +56,18 @@ public class DefaultQuestionService implements QuestionService {
 
     @Override
     @Transactional
-    @Cacheable(value = "question", key = "#id")
+    @CacheEvict(value = "question", key = "#id")
     public void update(UUID id, QuestionDto questionDto) {
         log.info("update {}, {}", id, questionDto);
 
         this.questionRepository.findByIdAndIsActive(id, true).ifPresentOrElse(question -> {
-            Question updatedQuestion = Question.builder()
-                    .id(id)
-                    .title(questionDto.title())
-                    .description(questionDto.description())
-                    .correctAnswer(questionDto.correctAnswer())
-                    .explanation(questionDto.explanation())
-                    .quiz(question.getQuiz())
-                    .score(questionDto.score())
-                    .isActive(true)
-                    .build();
-
-            this.questionRepository.save(updatedQuestion);
+            question.setTitle(questionDto.title());
+            question.setDescription(questionDto.description());
+            question.setCorrectAnswer(questionDto.correctAnswer());
+            question.setExplanation(questionDto.explanation());
+            question.setScore(questionDto.score());
         }, () -> {
-            throw ExceptionUtils.notFound("error.question.not_found_id", id);
+            throw ExceptionUtils.notFound("error.question.not_found", id);
         });
     }
 

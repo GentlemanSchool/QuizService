@@ -3,7 +3,7 @@ package ru.gentleman.quiz.command;
 import lombok.Builder;
 import org.axonframework.modelling.command.TargetAggregateIdentifier;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 @Builder
@@ -14,6 +14,6 @@ public record CreateUserAnswerCommand(
         @TargetAggregateIdentifier
         UUID quizAttemptId,
         String answer,
-        LocalDateTime createdAt
+        Instant createdAt
 ) {
 }

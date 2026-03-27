@@ -18,9 +18,8 @@ import ru.gentleman.quiz.command.DeleteQuizAttemptCommand;
 import ru.gentleman.quiz.command.FinishQuizAttemptCommand;
 import ru.gentleman.quiz.dto.QuestionDto;
 import ru.gentleman.quiz.dto.UserAnswerDto;
-import ru.gentleman.quiz.service.QuizService;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -48,9 +47,9 @@ public class QuizAttemptAggregate {
 
     private Boolean isActive;
 
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
-    private LocalDateTime completedAt;
+    private Instant completedAt;
 
     private Map<UUID, QuestionSnapshot> questions;
 
@@ -61,8 +60,8 @@ public class QuizAttemptAggregate {
     }
 
     @CommandHandler
-    public QuizAttemptAggregate(CreateQuizAttemptCommand command, QuizService quizService) {
-        List<QuestionDto> receivedQuestions = quizService.getAllQuestions(command.quizId());
+    public QuizAttemptAggregate(CreateQuizAttemptCommand command) {
+        List<QuestionDto> receivedQuestions = command.questions();
         Map<UUID, QuestionSnapshot> questionMap = receivedQuestions.stream()
                 .map(questionDto -> QuestionSnapshot.builder()
                         .id(questionDto.id())
@@ -190,7 +189,7 @@ public class QuizAttemptAggregate {
 
         QuizAttemptFinishedEvent event = QuizAttemptFinishedEvent.builder()
                 .id(command.id())
-                .completedAt(LocalDateTime.now())
+                .completedAt(Instant.now())
                 .finalScore(finalScore)
                 .build();
 

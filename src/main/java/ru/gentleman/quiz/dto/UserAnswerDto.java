@@ -2,7 +2,7 @@ package ru.gentleman.quiz.dto;
 
 import lombok.Builder;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 @Builder
@@ -13,6 +13,6 @@ public record UserAnswerDto(
         UUID quizAttemptId,
         Boolean isCorrect,
         String answer,
-        LocalDateTime createdAt
+        Instant createdAt
 ) {
 }

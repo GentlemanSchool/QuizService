@@ -16,7 +16,7 @@ import ru.gentleman.quiz.command.CreateUserAnswerCommand;
 import ru.gentleman.quiz.dto.UserAnswerDto;
 
 import java.net.URI;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -43,7 +43,7 @@ public class UserAnswerCommandController {
                 .questionId(userAnswerDto.questionId())
                 .quizAttemptId(userAnswerDto.quizAttemptId())
                 .answer(userAnswerDto.answer())
-                .createdAt(LocalDateTime.now())
+                .createdAt(Instant.now())
                 .build();
 
         this.commandGateway.sendAndWait(command);
