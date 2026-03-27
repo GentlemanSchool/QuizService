@@ -15,7 +15,7 @@ import ru.gentleman.quiz.repository.QuizAttemptRepository;
 import ru.gentleman.quiz.service.QuizAttemptService;
 import ru.gentleman.quiz.service.QuizService;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -56,22 +56,24 @@ public class DefaultQuizAttemptService implements QuizAttemptService {
 
     @Override
     @Transactional
-    public void create(QuizAttemptDto dto) {
+    public QuizAttemptDto create(QuizAttemptDto dto) {
         log.info("create {}", dto);
 
         this.quizService.get(dto.quizId());
         QuizAttempt quizAttempt = this.quizAttemptMapper.toEntity(dto);
         quizAttempt.setIsActive(true);
 
-        this.quizAttemptRepository.save(quizAttempt);
+        QuizAttempt createdQuizAttempt = this.quizAttemptRepository.save(quizAttempt);
 
         this.cacheClear.clearAllQuizAttemptsByUserId(quizAttempt.getUserId());
+
+        return this.quizAttemptMapper.toDto(createdQuizAttempt);
     }
 
     @Override
     @Transactional
     @CacheEvict(value = "quizAttempt", key = "#id")
-    public void finish(UUID id, int finalScore, LocalDateTime completedAt) {
+    public void finish(UUID id, int finalScore, Instant completedAt) {
         log.info("finish {} {}", id, finalScore);
 
         QuizAttempt quizAttempt = this.quizAttemptRepository.findById(id)

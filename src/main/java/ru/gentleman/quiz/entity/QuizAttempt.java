@@ -3,7 +3,7 @@ package ru.gentleman.quiz.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,9 +23,9 @@ public class QuizAttempt {
 
     private int finalScore;
 
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
-    private LocalDateTime completedAt;
+    private Instant completedAt;
 
     private Boolean isActive;
 

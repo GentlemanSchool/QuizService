@@ -2,7 +2,7 @@ package ru.gentleman.quiz.dto;
 
 import lombok.Builder;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 @Builder
@@ -11,8 +11,8 @@ public record QuizAttemptDto(
         UUID userId,
         UUID quizId,
         int finalScore,
-        LocalDateTime createdAt,
-        LocalDateTime completedAt,
+        Instant createdAt,
+        Instant completedAt,
         Boolean isActive
 ) {
 }

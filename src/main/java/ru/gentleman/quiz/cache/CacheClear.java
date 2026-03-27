@@ -17,7 +17,7 @@ public class CacheClear {
 
     public void clearAllQuizAttemptsByUserId(UUID userId){
         log.info("allQuizAttemptsByUserId");
-        deleteCache("clearAllQuizAttemptsByUserId", userId);
+        deleteCache("allQuizAttemptsByUserId", userId);
     }
 
     private void deleteCache(String key, Object value){

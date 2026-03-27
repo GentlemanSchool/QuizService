@@ -48,11 +48,13 @@ public class DefaultUserAnswerService implements UserAnswerService  {
 
     @Override
     @CacheEvict(value = "allUserAnswersByUserId", key = "#dto.userId()")
-    public void create(UserAnswerDto dto) {
+    public UserAnswerDto create(UserAnswerDto dto) {
         log.info("create {}", dto);
 
-        this.userAnswerRepository.save(
+        UserAnswer createdUserAnswer = this.userAnswerRepository.save(
                 this.userAnswerMapper.toEntity(dto)
         );
+
+        return this.userAnswerMapper.toDto(createdUserAnswer);
     }
 }

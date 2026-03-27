@@ -2,7 +2,7 @@ package ru.gentleman.quiz.service;
 
 import ru.gentleman.quiz.dto.QuizAttemptDto;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -12,9 +12,9 @@ public interface QuizAttemptService  {
 
     List<QuizAttemptDto> getAllByUserId(UUID userId);
 
-    void create(QuizAttemptDto dto);
+    QuizAttemptDto create(QuizAttemptDto dto);
 
-    void finish(UUID id, int finalScore, LocalDateTime completedAt);
+    void finish(UUID id, int finalScore, Instant completedAt);
 
     boolean existsById(UUID id);
 

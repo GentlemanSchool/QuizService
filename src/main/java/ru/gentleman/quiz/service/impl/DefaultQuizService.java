@@ -65,17 +65,10 @@ public class DefaultQuizService implements QuizService {
     public void update(UUID id, QuizDto quizDto) {
         log.info("update {}, {}", id, quizDto);
 
-        this.quizRepository.findById(id).ifPresentOrElse(question -> {
-            Quiz updatedQuiz = Quiz.builder()
-                    .id(id)
-                    .title(quizDto.title())
-                    .description(quizDto.description())
-                    .lessonId(quizDto.lessonId())
-                    .isActive(true)
-                    .questions(question.getQuestions())
-                    .build();
-
-            this.quizRepository.save(updatedQuiz);
+        this.quizRepository.findById(id).ifPresentOrElse(quiz -> {
+            quiz.setTitle(quizDto.title());
+            quiz.setDescription(quizDto.description());
+            quiz.setLessonId(quizDto.lessonId());
         }, () -> {
             throw ExceptionUtils.notFound("error.quiz.not_found_id", id);
         });
